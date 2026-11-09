@@ -1,0 +1,6 @@
+{
+  "name": "MediSchedule - Programador Quirúrgico e Intervencionista",
+  "description": "Programador de pacientes médico con semaforización de citas, recordatorios automatizados a 7 y 1 día por WhatsApp y correo institucional, y checklist clínico de autorizaciones y anestesia.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

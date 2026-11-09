@@ -1,0 +1,128 @@
+<div class="min-h-screen bg-slate-100 flex flex-col font-sans selection:bg-teal-600 selection:text-white">
+  <!-- Header Principal -->
+  <app-header
+    (openNewPatientModal)="openNewPatientModal()"
+    (openScanModal)="openScan()"
+    class="no-print"
+  />
+
+  <!-- Contenedor Principal del Dashboard -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+    <!-- Banner de Información Especializada (si se seleccionó una especialidad específica) -->
+    @if (currentSelectedMeta(); as currentMeta) {
+      <div
+        class="rounded-2xl p-4 border shadow-xs no-print flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-in fade-in"
+        [class]="currentMeta.badgeBg + ' ' + currentMeta.borderCol"
+      >
+        <div class="flex items-start gap-3">
+          <div
+            class="w-10 h-10 rounded-xl text-white flex items-center justify-center shrink-0 shadow-xs"
+            [class]="currentMeta.accentBg"
+          >
+            <mat-icon class="text-[22px]">{{ currentMeta.icono }}</mat-icon>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="font-bold text-slate-900 text-sm">{{ currentMeta.nombre }}</h2>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/80 border border-slate-200 text-slate-700">
+                Protocolo Clínico Estandarizado
+              </span>
+            </div>
+            <p class="text-xs text-slate-600 mt-0.5 max-w-3xl">
+              <strong>Guía de Preparación:</strong> {{ currentMeta.recomendacionesEstandar }}
+            </p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          (click)="openNewPatientModal()"
+          class="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white shadow-xs hover:shadow transition-all"
+          [class]="currentMeta.accentBg"
+        >
+          <mat-icon class="text-[16px]">add</mat-icon>
+          <span>Programar en esta especialidad</span>
+        </button>
+      </div>
+    }
+
+    <!-- Tarjetas de Métricas & Semáforos -->
+    <section class="no-print" aria-label="Métricas clínicas">
+      <app-stat-cards />
+    </section>
+
+    <!-- Filtros de Búsqueda y Especialidades -->
+    <section class="no-print" aria-label="Filtros y navegación">
+      <app-filters />
+    </section>
+
+    <!-- Tabla Maestra de Programación de Pacientes -->
+    <section aria-label="Plantilla de programación de pacientes">
+      <app-schedule-table
+        (editPatient)="openEditPatientModal($event)"
+        (openChecklist)="openChecklist($event)"
+        (openReminderModal)="openReminder($event)"
+      />
+    </section>
+
+    <!-- Barra Inferior de Soporte y Acceso Rápido -->
+    <footer class="mt-8 pt-4 pb-6 border-t border-slate-200 text-slate-500 text-xs flex flex-wrap items-center justify-between gap-4 no-print">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+        <span class="font-medium text-slate-700">Sistema Activo</span>
+        <span>•</span>
+        <span>Sincronización con WhatsApp Web / App y Correo Institucional</span>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button
+          type="button"
+          (click)="openScan()"
+          class="text-amber-700 hover:text-amber-900 font-bold inline-flex items-center gap-1"
+        >
+          <mat-icon class="text-[16px]">notifications_active</mat-icon>
+          <span>Escáner de Recordatorios</span>
+        </button>
+
+        <button
+          type="button"
+          (click)="resetSeedData()"
+          class="text-slate-500 hover:text-slate-800 font-medium inline-flex items-center gap-1 hover:underline"
+        >
+          <mat-icon class="text-[16px]">restore</mat-icon>
+          <span>Restaurar Datos de Demostración</span>
+        </button>
+      </div>
+    </footer>
+  </main>
+
+  <!-- Modales Dinámicos -->
+  @if (showPatientForm()) {
+    <app-patient-form-modal
+      [patientToEdit]="editingPatient()"
+      (closeModal)="closePatientForm()"
+    />
+  }
+
+  @if (showReminderModal() && activeReminderPatient()) {
+    <app-reminder-modal
+      [patient]="activeReminderPatient()!"
+      [initialTipo]="activeReminderTipo()"
+      (closeModal)="closeReminder()"
+    />
+  }
+
+  @if (showChecklistModal() && activeChecklistPatient()) {
+    <app-checklist-modal
+      [patient]="activeChecklistPatient()!"
+      (closeModal)="closeChecklist()"
+    />
+  }
+
+  @if (showScanModal()) {
+    <app-scan-summary-modal
+      (closeModal)="closeScan()"
+      (openReminder)="openReminder($event); closeScan()"
+    />
+  }
+</div>
