@@ -13,6 +13,14 @@ npx ng serve --port 3000 --host 127.0.0.1
 
 Abra <http://127.0.0.1:3000>.
 
+## Despliegue estático en Render
+
+- Tipo de servicio: **Static Site**.
+- Build Command: `npm ci && npm run build`.
+- Publish Directory: `dist/app/browser`.
+- No se requiere Start Command.
+- El sitio estático no ejecuta el servidor Express ni Gemini; los recordatorios usan las plantillas locales de respaldo.
+
 ## Alcance de la demostración
 
 - Los registros se guardan en el almacenamiento local del navegador. No hay base de datos compartida ni control de acceso.
